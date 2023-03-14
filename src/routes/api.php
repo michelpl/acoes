@@ -25,7 +25,7 @@ Route::group(['prefix' => 'V1'], function () {
         return "BASE";
     });
     Route::controller(StockController::class)->group(function () {
-        Route::get('/{slug}','getStockExternalId');
+        Route::get('/stock/{slug}','getStockExternalId');
     });
 
     Route::controller(StockController::class)->group(function () {
@@ -34,5 +34,9 @@ Route::group(['prefix' => 'V1'], function () {
 
     Route::controller(StockController::class)->group(function () {
         Route::get('/fundamental_value/{slug}','getStockFundamentalValue');
+    });
+
+    Route::controller(StockController::class)->group(function () {
+        Route::get('/stock','list');
     });
 });

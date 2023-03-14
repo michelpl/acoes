@@ -96,4 +96,9 @@ class StockService
         $stock->name = $name;
         $stock->save();
     }
+
+    public function list()
+    {
+        return Stock::all();
+    }
 }

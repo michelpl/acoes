@@ -44,4 +44,9 @@ class StockController extends Controller
             return response($e->getMessage(), $e->getCode());
         }
     }
+
+    public function list()
+    {
+        return $this->stockService->list();
+    }
 }
