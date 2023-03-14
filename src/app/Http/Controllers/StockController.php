@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StockList;
 use App\Services\StockService;
 use Exception;
+use Illuminate\Http\Request;
 use function response;
 
 class StockController extends Controller
@@ -23,7 +25,7 @@ class StockController extends Controller
             return response($e->getMessage(), $e->getCode());
         }
     }
-    public function getStockData(string $slug)
+    public function getStockExternalData(string $slug)
     {
         try {
             $stockId = $this->stockService->getStockExternalId($slug);
@@ -48,5 +50,15 @@ class StockController extends Controller
     public function list()
     {
         return $this->stockService->list();
+    }
+
+    public function getStockList()
+    {
+        return $this->stockService->getStockList();
+    }
+
+    public function addStockList(Request $request)
+    {
+       $this->stockService->addStockList($request);
     }
 }

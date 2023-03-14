@@ -25,18 +25,11 @@ Route::group(['prefix' => 'V1'], function () {
         return "BASE";
     });
     Route::controller(StockController::class)->group(function () {
-        Route::get('/stock/{slug}','getStockExternalId');
-    });
-
-    Route::controller(StockController::class)->group(function () {
-        Route::get('/stock_data/{slug}','getStockData');
-    });
-
-    Route::controller(StockController::class)->group(function () {
-        Route::get('/fundamental_value/{slug}','getStockFundamentalValue');
-    });
-
-    Route::controller(StockController::class)->group(function () {
         Route::get('/stock','list');
+        Route::get('/stock/{slug}','getStockExternalId');
+        Route::get('/stock/external-data/{slug}','getStockExternalData');
+        Route::get('/stock/fundamental-value/{slug}','getStockFundamentalValue');
+        Route::get('/stock-list','getStockList');
+        Route::post('/stock-list','addStockList');
     });
 });

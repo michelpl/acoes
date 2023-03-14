@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Models\Stock;
+use App\Models\StockList;
 use DOMDocument;
 use Exception;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class StockService
@@ -100,5 +102,19 @@ class StockService
     public function list()
     {
         return Stock::all();
+    }
+
+    public function getStockList()
+    {
+        return StockList::all();
+    }
+
+    public function addStockList(Request $request)
+    {
+        StockList::firstOrCreate([
+            'user_id' => $request->user_id,
+            'name' => $request->name,
+            'slug' => $request->slug,
+        ]);
     }
 }
