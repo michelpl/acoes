@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('slug')->unique();
+            $table->string('external_id')->unique();
             $table->string('name');
             $table->timestamps();
         });

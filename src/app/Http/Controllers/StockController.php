@@ -59,6 +59,6 @@ class StockController extends Controller
 
     public function addStockList(Request $request)
     {
-       $this->stockService->addStockList($request);
+       return $this->stockService->addStockList($request);
     }
 }

@@ -10,8 +10,9 @@ class StockList extends Model
     use HasFactory;
 
     protected $fillable = [
-      'slug',
-      'name',
-      'user_id'
+        'slug',
+        'name',
+        'user_id',
+        'external_id'
     ];
 }
