@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Stock;
 use DOMDocument;
 use Exception;
 use Illuminate\Http\Client\Response;
@@ -11,10 +12,13 @@ class StockService
 {
     const GRAHAM_CONST = '22.5';
 
+    public function __Construct(
+    ){}
+
     /**
      * @throws Exception
      */
-    public function getStockId(string $slug): int
+    public function getStockExternalId(string $slug): int
     {
         try {
             $uri = env('BASE_EXTERNAL_API_URL') . '/acoes/' . $slug;
@@ -24,14 +28,20 @@ class StockService
             $dom = new DOMDocument();
             @$dom->loadHTML($response->body());
             $htmlElement = $dom->getElementById('follow-company-mobile')->getAttributeNode("data-id");
+            $htmlTitle = $dom->getElementsByTagName('title');
+            if (! empty($htmlTitle[0])) {
+                $title = explode('-', $htmlTitle[0]->nodeValue);
+                $stockName = $title[1];
+            }
 
             if (!empty($htmlElement) && ! empty($htmlElement->value)) {
+                $this->saveStock((int) $htmlElement->value, $slug, $stockName);
                 return (int) $htmlElement->value;
             }
 
             throw new Exception("Html element not found", 500);
         } catch (Exception $exception) {
-            throw new Exception($exception->getMessage(), $exception->getCode() ?? 400);
+            throw new Exception($exception->getMessage(), 404);
         }
     }
 
@@ -71,5 +81,19 @@ class StockService
     {
         //quadrada de (22,5 x LPA x VPA)
         return number_format(sqrt(self::GRAHAM_CONST * $lpa * $vpa), 2);
+    }
+
+    private function saveStock(int $stockExternalId, string $slug, $name): void
+    {
+        $stock = Stock::where('external_id', $stockExternalId)->first();
+
+        if (empty($stock)) {
+            $stock = new Stock();
+            $stock->external_id = $stockExternalId;
+        }
+
+        $stock->slug = $slug;
+        $stock->name = $name;
+        $stock->save();
     }
 }

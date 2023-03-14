@@ -23,3 +23,9 @@ permissions:
 	sudo find src/ -type d -exec chmod 775 {} \;
 	sudo find src/ -type f -exec chmod 664 {} \;
 	sudo chown -R www-data:${USER} src
+
+bash:
+	docker-compose exec webapi bash
+
+artisan:
+	docker-compose exec webapi php artisan
