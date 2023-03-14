@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\ChargeController;
-use App\Http\Controllers\CsvDataController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Http\Request;
@@ -22,19 +22,17 @@ Route::group(['prefix' => 'V1'], function () {
 
     //API ROOT
     Route::get('/', function(){
-        return "KNT HIRING CHALLENGE";
+        return "BASE";
+    });
+    Route::controller(StockController::class)->group(function () {
+        Route::get('/{slug}','getStockId');
     });
 
-    Route::controller(ChargeController::class)->group(function () {
-        Route::get('/charges', 'list');
-        Route::post('/charges', 'store');
-        Route::post('/customerchargemails', 'sendChargeToCustomers');
+    Route::controller(StockController::class)->group(function () {
+        Route::get('/stock_data/{slug}','getStockData');
     });
 
-    Route::controller(CsvDataController::class)->group(function () {
-        Route::post('/csvdata','store');
-        Route::post('/charges/csv_data','createChargeFromCSVDatabase');
+    Route::controller(StockController::class)->group(function () {
+        Route::get('/fundamental_value/{slug}','getStockFundamentalValue');
     });
-
-    Route::post('/webhook', [WebhookController::class, 'pay']);
 });

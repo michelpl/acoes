@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Http\Controllers\ChargeController;
-use App\Http\Controllers\CsvDataController;
+use App\Http\Controllers\StockController;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Services\ChargeService;
@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //Every minute only for challenge delivery  purposes
-        $schedule->call('App\Http\Controllers\CsvDataController@createChargeFromCSVDatabase')->everyMinute(); 
+        $schedule->call('App\Http\Controllers\CsvDataController@createChargeFromCSVDatabase')->everyMinute();
         $schedule->call('App\Http\Controllers\ChargeController@sendChargeToCustomers')->everyMinute();
     }
 

@@ -1,13 +1,13 @@
-# 🧪 Hiring Challenge
+# 🧪 Ações API
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/1954140-6a0a051a-1bf6-4c19-9702-26058efaf04d?action=collection%2Ffork&collection-url=entityId%3D1954140-6a0a051a-1bf6-4c19-9702-26058efaf04d%26entityType%3Dcollection%26workspaceId%3D884cf7ff-ca99-4231-944e-d47ac4babda5)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/#)
 
-## :memo: Api doc
-[Api documentation](https://documenter.getpostman.com/view/1954140/2s8Z6yYZHS)
+## Api doc
+[Api documentation](https://documenter.getpostman.com/view/#)
 
 ## 📈 Sequence diagram
 
-![image](https://user-images.githubusercontent.com/6605776/210117293-618adc93-f112-4d6f-bb22-dff6fa2f807d.png)
+
 
 
 ## ⬆️ Dependencies
@@ -25,7 +25,7 @@
 Clone this repository
 
 ```bash
-https://github.com/michelpl/hiring-challenge-docker.git
+https://github.com/michelpl/stock-api.git
 ```
 
 Enter in repository folder
@@ -45,7 +45,7 @@ make install
 Clone this repository
 
 ```bash
-https://github.com/michelpl/hiring-challenge-docker.git
+https://github.com/michelpl/stock-api.git
 ```
 
 Enter in repository folder
@@ -101,7 +101,7 @@ http://localhost:8000/api/V1
 
 ## 🧑‍💻 Consuming the API
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/1954140-6a0a051a-1bf6-4c19-9702-26058efaf04d?action=collection%2Ffork&collection-url=entityId%3D1954140-6a0a051a-1bf6-4c19-9702-26058efaf04d%26entityType%3Dcollection%26workspaceId%3D884cf7ff-ca99-4231-944e-d47ac4babda5)
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/#)
 
 ## 🧑‍💻 Development environment
 

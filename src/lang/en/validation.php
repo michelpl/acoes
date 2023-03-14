@@ -15,7 +15,7 @@ return [
 
     'accepted' => 'The :attribute must be accepted.',
     'accepted_if' => 'The :attribute must be accepted when :other is :value.',
-    'active_url' => 'The :attribute is not a valid URL.',
+    'active_url' => 'The :attribute is not a valid BASE_URL.',
     'after' => 'The :attribute must be a date after :date.',
     'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
     'alpha' => 'The :attribute must only contain letters.',
@@ -142,7 +142,7 @@ return [
     'unique' => 'The :attribute has already been taken.',
     'uploaded' => 'The :attribute failed to upload.',
     'uppercase' => 'The :attribute must be uppercase.',
-    'url' => 'The :attribute must be a valid URL.',
+    'url' => 'The :attribute must be a valid BASE_URL.',
     'ulid' => 'The :attribute must be a valid ULID.',
     'uuid' => 'The :attribute must be a valid UUID.',
 
