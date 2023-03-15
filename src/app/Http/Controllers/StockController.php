@@ -56,6 +56,10 @@ class StockController extends Controller
     {
         return $this->stockService->getStockList();
     }
+    public function getStockInvestmentData(string $slug)
+    {
+        return $this->stockService->getStockInvestmentData($slug);
+    }
 
     public function addStockList(Request $request)
     {

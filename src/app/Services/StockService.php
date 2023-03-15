@@ -125,7 +125,12 @@ class StockService
         $stockList = StockList::all('slug', 'name');
         $result = [];
         foreach ($stockList as $item) {
-            $externalId = $this->getStockExternalId($item->slug);
+            $data = $this->getExternalIdAndNameFromDatabase($item->slug);
+            if(empty($data['external_id'])) {
+                return 'Slug not found';
+            }
+
+            $externalId = $data['external_id'];
             $stockData = $this->getStockData($externalId);
             $currentPrice = $this->getCurrentValue($externalId);
             $fundamentalValue = $this->getStockFundamentalValue($externalId);
@@ -135,11 +140,36 @@ class StockService
                 'name' => $item->name,
                 'current-price' => $currentPrice,
                 'fundamental-value' => $fundamentalValue,
-                'growing-expectation' => $this->getGrowingExpectation($fundamentalValue, $currentPrice),
                 'P/VP' => $stockData['P/VP'][0]['value'],
-                'DY' => $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%'
+                'DY' => $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
+                'growing-expectation' => $this->getGrowingExpectation($fundamentalValue, $currentPrice)
             ];
         }
+
+        return $result;
+    }
+
+    public function getStockInvestmentData(string $slug)
+    {
+        $data = $this->getExternalIdAndNameFromDatabase($slug);
+        if(empty($data['external_id'])) {
+            return 'Slug not found';
+        }
+
+        $externalId = $data['external_id'];
+        $stockData = $this->getStockData($externalId);
+        $currentPrice = $this->getCurrentValue($externalId);
+        $fundamentalValue = $this->getStockFundamentalValue($externalId);
+
+        $result[] = [
+            'slug' => $slug,
+            'name' => $data['name'],
+            'current-price' => $currentPrice,
+            'fundamental-value' => $fundamentalValue,
+            'P/VP' => $stockData['P/VP'][0]['value'],
+            'DY' => $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
+            'growing-expectation' => $this->getGrowingExpectation($fundamentalValue, $currentPrice)
+        ];
 
         return $result;
     }
@@ -153,12 +183,23 @@ class StockService
 
     public function addStockList(Request $request)
     {
-        $externalId = $this->getStockExternalId($request->slug);
+        $stockData = $this->getExternalIdAndNameFromDatabase($request->slug);
+
+        if(empty($stockData->external_id)) {
+            return "Could not find the slug " . $request->slug . ' on database';
+        }
+
         StockList::firstOrCreate([
             'user_id' => $request->user_id,
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'external_id' => $externalId
+            'name' => $stockData->name,
+            'slug' =>  $request->slug,
+            'external_id' => $stockData->external_id
         ]);
+    }
+
+    public function getExternalIdAndNameFromDatabase(string $slug)
+    {
+        $stocks = Stock::where('slug', $slug)->first();
+        return $stocks;
     }
 }
