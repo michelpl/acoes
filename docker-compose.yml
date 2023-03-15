@@ -15,12 +15,24 @@ services:
       - dbdata:/var/lib/mysql
     networks:
       - app-network
+  cache:
+    image: redis:latest
+    restart: always
+    container_name: redis
+    ports:
+      - "6300:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass root
+    volumes:
+      - cache:/data
+    networks:
+      - app-network
   webapi:
     container_name: webapi
     deploy:
       mode: replicated
     depends_on:
       - db
+      - cache
     build: ./api
     ports:
       - "8000:80"
@@ -28,7 +40,10 @@ services:
       - app-network
     volumes:
       - ./src:/var/www/html:rw
-      
+    environment:
+      REDIS_HOST: cache
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: root
 #Docker Networks
 networks:
   app-network:
@@ -38,3 +53,4 @@ networks:
 volumes:
   src:
   dbdata:
+  cache:
