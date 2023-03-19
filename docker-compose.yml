@@ -44,13 +44,13 @@ services:
     depends_on:
       - db
       - cache
-    build: ./api
+    build: ./webapi
     ports:
       - "8000:80"
     networks:
       - app-network
     volumes:
-      - ./src:/var/www/html:rw
+      - ./webapi/src:/var/www/html:rw
     environment:
       REDIS_HOST: cache
       REDIS_PORT: 6379
@@ -62,7 +62,7 @@ networks:
 
 #Docker volumes
 volumes:
-  src:
+  webapisrc:
   dbdata:
   cache:
   webappsrc:
