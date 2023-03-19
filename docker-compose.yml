@@ -26,6 +26,17 @@ services:
       - cache:/data
     networks:
       - app-network
+  webapp:
+      container_name: webapp
+      depends_on:
+        - db
+      build: ./webapp
+      ports:
+        - "3000:3000"
+      networks:
+        - app-network
+      volumes:
+        - ./webapp/src:/app:rw
   webapi:
     container_name: webapi
     deploy:
@@ -54,3 +65,4 @@ volumes:
   src:
   dbdata:
   cache:
+  webappsrc:

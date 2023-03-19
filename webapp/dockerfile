@@ -1,1 +1,19 @@
-FROM node:latest
+FROM node:lts-alpine
+
+RUN npm install -g http-server
+WORKDIR /app
+
+## GIT
+RUN apk add git
+
+## Others
+RUN apk add vim
+
+# instala dependências do projeto
+#RUN npm install
+
+# compila a aplicação de produção com minificação
+#RUN npm run build
+
+EXPOSE 8080
+CMD [ "http-server", "dist" ]
