@@ -17,7 +17,9 @@ class StockFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'external_id' => 123,
+            'slug' => 'TESTE11',
+            'name' => 'Test Stock'
         ];
     }
 }

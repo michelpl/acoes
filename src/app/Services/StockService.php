@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\StockDataDTO;
 use App\Models\Stock;
 use App\Models\StockList;
 use DOMDocument;
@@ -31,13 +32,15 @@ class StockService
             @$dom->loadHTML($response->body());
             $htmlElement = $dom->getElementById('follow-company-mobile')->getAttributeNode("data-id");
             $htmlTitle = $dom->getElementsByTagName('title');
+            $companyName = "";
+
             if (! empty($htmlTitle[0])) {
                 $title = explode('-', $htmlTitle[0]->nodeValue);
-                $stockName = $title[1];
+                $companyName = $title[1];
             }
 
             if (!empty($htmlElement) && ! empty($htmlElement->value)) {
-                $this->saveStock((int) $htmlElement->value, $slug, $stockName);
+                $this->saveStock((int) $htmlElement->value, $slug, trim($companyName));
                 return (int) $htmlElement->value;
             }
 
@@ -101,7 +104,7 @@ class StockService
         return number_format(sqrt(self::GRAHAM_CONST * $lpa * $vpa), 2);
     }
 
-    private function saveStock(int $stockExternalId, string $slug, $name): void
+    private function saveStock(int $stockExternalId, string $slug, $companyName): void
     {
         $stock = Stock::where('external_id', $stockExternalId)->first();
 
@@ -111,7 +114,7 @@ class StockService
         }
 
         $stock->slug = $slug;
-        $stock->name = $name;
+        $stock->name = $companyName;
         $stock->save();
     }
 
@@ -120,7 +123,7 @@ class StockService
         return Stock::all();
     }
 
-    public function getStockList()
+    public function getStockList(): array | string
     {
         $stockList = StockList::all('slug', 'name');
         $result = [];
@@ -135,21 +138,22 @@ class StockService
             $currentPrice = $this->getCurrentValue($externalId);
             $fundamentalValue = $this->getStockFundamentalValue($externalId);
 
-            $result[] = [
-                'slug' => $item->slug,
-                'name' => $item->name,
-                'current-price' => $currentPrice,
-                'fundamental-value' => $fundamentalValue,
-                'P/VP' => $stockData['P/VP'][0]['value'],
-                'DY' => $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
-                'growing-expectation' => $this->getGrowingExpectation($fundamentalValue, $currentPrice)
-            ];
+            $result[] =
+                new StockDataDTO(
+                    $item->slug,
+                    $item->name,
+                    $currentPrice,
+                    $fundamentalValue,
+                    $stockData['P/VP'][0]['value'],
+                    $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
+                    $this->getGrowingExpectation($fundamentalValue, $currentPrice)
+                );
         }
 
         return $result;
     }
 
-    public function getStockInvestmentData(string $slug)
+    public function getStockInvestmentData(string $slug): StockDataDTO | string
     {
         $data = $this->getExternalIdAndNameFromDatabase($slug);
         if(empty($data['external_id'])) {
@@ -161,17 +165,15 @@ class StockService
         $currentPrice = $this->getCurrentValue($externalId);
         $fundamentalValue = $this->getStockFundamentalValue($externalId);
 
-        $result[] = [
-            'slug' => $slug,
-            'name' => $data['name'],
-            'current-price' => $currentPrice,
-            'fundamental-value' => $fundamentalValue,
-            'P/VP' => $stockData['P/VP'][0]['value'],
-            'DY' => $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
-            'growing-expectation' => $this->getGrowingExpectation($fundamentalValue, $currentPrice)
-        ];
-
-        return $result;
+        return new StockDataDTO(
+            $slug,
+            $data['name'],
+            $currentPrice,
+            $fundamentalValue,
+            $stockData['P/VP'][0]['value'],
+            $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
+            $this->getGrowingExpectation($fundamentalValue, $currentPrice)
+        );
     }
 
     public function getGrowingExpectation($fundamentalValue, $currentPrice)

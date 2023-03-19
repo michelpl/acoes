@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\StockDataDTO;
 use App\Models\StockList;
 use App\Services\StockService;
 use Exception;
@@ -58,7 +59,12 @@ class StockController extends Controller
     }
     public function getStockInvestmentData(string $slug)
     {
-        return $this->stockService->getStockInvestmentData($slug);
+        $data = $this->stockService->getStockInvestmentData($slug);
+        if($data instanceof StockDataDTO) {
+            return $data->toArray();
+        }
+
+        return $data;
     }
 
     public function addStockList(Request $request)
