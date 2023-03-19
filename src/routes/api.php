@@ -31,5 +31,6 @@ Route::group(['prefix' => 'V1'], function () {
         Route::get('/stock/fundamental-value/{slug}','getStockInvestmentData');
         Route::get('/stock-list','getStockList');
         Route::post('/stock-list','addStockList');
+        Route::post('/update-stock-list','updateStockList');
     });
 });

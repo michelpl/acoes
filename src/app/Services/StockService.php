@@ -25,8 +25,8 @@ class StockService
     {
         try {
             $uri = env('BASE_EXTERNAL_API_URL') . '/acoes/' . $slug;
-            $response = Http::get($uri)->throw(function (Response $response){
-                throw new Exception('Stock not found', $response->status());
+            $response = Http::get($uri)->throw(function (Response $response) use ($slug) {
+                throw new Exception('Stock not found: ' . $slug, $response->status());
             });
             $dom = new DOMDocument();
             @$dom->loadHTML($response->body());
@@ -55,8 +55,8 @@ class StockService
         try {
             $uri = env('BASE_EXTERNAL_API_URL') . '/api/historico-indicadores/' . $stockId . '/3';
 
-            return Http::get($uri)->throw(function (Response $response){
-                throw new Exception('Stock not found', $response->status());
+            return Http::get($uri)->throw(function (Response $response) use ($stockId) {
+                throw new Exception('Stock not found: ' . $stockId, $response->status());
             })->json();
 
         } catch (Exception $exception) {
@@ -71,15 +71,17 @@ class StockService
     public function getStockFundamentalValue(int $stockId)
     {
         $stockData = $this->getStockData($stockId);
-        if (empty($stockData['VPA'][0]['value'])) {
-            throw new Exception('VPA not found', 404);
+        if (empty($stockData['VPA'][0]['value']) || !is_numeric($stockData['VPA'][0]['value'])) {
+            return 0;
+            //throw new Exception('VPA for stockId ' . $stockId . ' not found', 404);
         }
 
-        if (empty($stockData['LPA'][0]['value'])) {
-            throw new Exception('VPA not found', 404);
+        if (empty($stockData['LPA'][0]['value']) || !is_numeric($stockData['LPA'][0]['value'])) {
+            return 0;
+            //throw new Exception('VPA for stockId ' . $stockId . ' not found', 404);
         }
 
-        return $this->graham($stockData['VPA'][0]['value'], $stockData['LPA'][0]['value']);
+        return $this->graham((float) $stockData['VPA'][0]['value'], (float) $stockData['LPA'][0]['value']);
     }
 
     public function getCurrentValue(int $stockId): float
@@ -87,8 +89,8 @@ class StockService
         try {
             $uri = env('BASE_EXTERNAL_API_URL') . '/api/cotacao/ticker/' . $stockId;
 
-            $result = Http::get($uri)->throw(function (Response $response){
-                throw new Exception('Stock not found', $response->status());
+            $result = Http::get($uri)->throw(function (Response $response) use ($stockId) {
+                throw new Exception('Stock not found: ' . $stockId, $response->status());
             })->json();
 
             return $result['price'];
@@ -101,7 +103,7 @@ class StockService
     public function graham(float $vpa, float $lpa): float
     {
         //quadrada de (22,5 x LPA x VPA)
-        return number_format(sqrt(self::GRAHAM_CONST * $lpa * $vpa), 2);
+        return (float) number_format(sqrt(self::GRAHAM_CONST * $lpa * $vpa), 2);
     }
 
     private function saveStock(int $stockExternalId, string $slug, $companyName): void
@@ -123,80 +125,75 @@ class StockService
         return Stock::all();
     }
 
-    public function getStockList(): array | string
+    public function getStockList()
     {
-        $stockList = StockList::all('slug', 'name');
-        $result = [];
-        foreach ($stockList as $item) {
-            $data = $this->getExternalIdAndNameFromDatabase($item->slug);
-            if(empty($data['external_id'])) {
-                return 'Slug not found';
-            }
+         return StockList::orderBy('growing_expectation')->get();
+    }
 
-            $externalId = $data['external_id'];
-            $stockData = $this->getStockData($externalId);
-            $currentPrice = $this->getCurrentValue($externalId);
-            $fundamentalValue = $this->getStockFundamentalValue($externalId);
-
-            $result[] =
-                new StockDataDTO(
-                    $item->slug,
-                    $item->name,
-                    $currentPrice,
-                    $fundamentalValue,
-                    $stockData['P/VP'][0]['value'],
-                    $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
-                    $this->getGrowingExpectation($fundamentalValue, $currentPrice)
-                );
+    public function updateStockList($skip, $take)
+    {
+        $allStocks = Stock::all()->skip($skip)->take($take);
+        foreach ($allStocks as $item) {
+            $this->getStockInvestmentData($item->slug);
         }
-
-        return $result;
     }
 
     public function getStockInvestmentData(string $slug): StockDataDTO | string
     {
         $data = $this->getExternalIdAndNameFromDatabase($slug);
         if(empty($data['external_id'])) {
-            return 'Slug not found';
+            return 'Slug not found: ' . $slug;
         }
 
         $externalId = $data['external_id'];
         $stockData = $this->getStockData($externalId);
         $currentPrice = $this->getCurrentValue($externalId);
         $fundamentalValue = $this->getStockFundamentalValue($externalId);
+        $PVP = 0;
+        $DY = 0;
+
+        if (!empty($stockData['P/VP'][0]['value']) && is_numeric($stockData['P/VP'][0]['value'])) {
+            $PVP = $stockData['P/VP'][0]['value'];
+        }
+
+        if (!empty($stockData['DIVIDEND YIELD (DY)'][0]['value']) && is_numeric($stockData['DIVIDEND YIELD (DY)'][0]['value'])) {
+            $DY= $stockData['DIVIDEND YIELD (DY)'][0]['value'];
+        }
+
+        $growingExpectation = $this->getGrowingExpectation($fundamentalValue, $currentPrice);
+
+        StockList::updateOrCreate([
+            'slug' => $slug,
+            'name' => $data['name'],
+            'external_id' => $externalId,
+            'current_price' => $currentPrice,
+            'fundamental_value' => $fundamentalValue,
+            'pvp' => $PVP,
+            'dy' => $DY,
+            'growing_expectation' => $growingExpectation
+        ]);
 
         return new StockDataDTO(
             $slug,
+            $externalId,
             $data['name'],
             $currentPrice,
             $fundamentalValue,
-            $stockData['P/VP'][0]['value'],
-            $stockData['DIVIDEND YIELD (DY)'][0]['value'] . '%',
-            $this->getGrowingExpectation($fundamentalValue, $currentPrice)
+            $PVP,
+            $DY . '%',
+            $growingExpectation . '%'
         );
     }
 
     public function getGrowingExpectation($fundamentalValue, $currentPrice)
     {
         $expectation = ($fundamentalValue - $currentPrice) / $currentPrice * 100;
-        return number_format($expectation, 2) . '%';
+        return number_format($expectation, 2, '.', '');
     }
-
 
     public function addStockList(Request $request)
     {
-        $stockData = $this->getExternalIdAndNameFromDatabase($request->slug);
-
-        if(empty($stockData->external_id)) {
-            return "Could not find the slug " . $request->slug . ' on database';
-        }
-
-        StockList::firstOrCreate([
-            'user_id' => $request->user_id,
-            'name' => $stockData->name,
-            'slug' =>  $request->slug,
-            'external_id' => $stockData->external_id
-        ]);
+        return $this->getStockInvestmentData($request->slug);
     }
 
     public function getExternalIdAndNameFromDatabase(string $slug)

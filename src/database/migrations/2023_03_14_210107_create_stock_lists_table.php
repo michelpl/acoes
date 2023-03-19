@@ -15,10 +15,14 @@ return new class extends Migration
     {
         Schema::create('stock_lists', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
             $table->string('slug')->unique();
             $table->string('external_id')->unique();
             $table->string('name');
+            $table->float('current_price');
+            $table->float('fundamental_value');
+            $table->float('pvp');
+            $table->float('dy');
+            $table->float('growing_expectation');
             $table->timestamps();
         });
     }

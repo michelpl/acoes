@@ -12,7 +12,11 @@ class StockList extends Model
     protected $fillable = [
         'slug',
         'name',
-        'user_id',
-        'external_id'
+        'external_id',
+        'current_price',
+        'fundamental_value',
+        'pvp',
+        'dy',
+        'growing_expectation'
     ];
 }
