@@ -1,34 +1,64 @@
 import Card from "../components/Card";
-import StockList from "../components/StockList";
-import {Button, Container, Paper, TextField} from "@mui/material";
-import {InputOutlined} from "@mui/icons-material";
 import Form from "../components/Form"
-import {useState} from "react";
+import React, {useState} from "react";
+import {Button} from "@mui/material";
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
+    const [stocks, setStocks] = useState([]);
+    const [data, setData] = useState({});
+
     const todoHandler = (todo) => {
         setTodos([...todos, todo])
     }
+
+    const setResult = (result) => {
+
+            /*result.map((res) => {
+                //console.log(res.id, res.title);
+                const stock = {id: res.id, title: res.title};
+                console.log(stock);
+
+
+            });*/
+            setTodos(result);
+            console.log(stocks);
+            //console.log(stocks);
+        //setStocks([...stocks, stock]);
+        //setTodos([...todos, stock])
+
+
+
+    }
+
+    const getJson = () => {
+        const result = fetch('http://localhost:8000/api/V1/stock-list')
+        .then(response => response.json())
+        .then(json => setStocks(json))
+    }
+
     return (
         <div>
+
             <div className="wrapper">
                 <Form
                     todoHandler={ todoHandler }
                 />
             </div>
+            <div className="wrapper">
+                <Button
+                    fullWidth={true}
+                    variant="contained" onClick={ () => getJson() }>Update</Button>
+            </div>
             <ul>
                 {
-                    todos.map((todo) => (
-                      <li id={ todo.id }>{ todo.text }</li>
+                    stocks.map((stock) => (
+                        <li>{ stock.slug }</li>
                     ))
                 }
             </ul>
             <div className="wrapper">
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
+
             </div>
             <div className="wrapper">
                 <Card/>
@@ -37,7 +67,10 @@ export default function Home() {
                 <Card/>
             </div>
             <div className="wrapper">
-                <StockList/>
+                <Card/>
+                <Card/>
+                <Card/>
+                <Card/>
             </div>
         </div>
     );

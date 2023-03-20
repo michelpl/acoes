@@ -16,7 +16,7 @@ export default function Form({ todoHandler }) {
             <TextField
                 fullWidth={true}
                 style={{ marginBottom: 10}}
-                id={outlinedInputClasses}
+                id="text"
                 label="Stock slug"
                 onChange={
                     (e) => setText(e.target.value)
