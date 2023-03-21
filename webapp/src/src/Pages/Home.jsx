@@ -6,72 +6,46 @@ import {Button} from "@mui/material";
 export default function Home() {
     const [todos, setTodos] = useState([]);
     const [stocks, setStocks] = useState([]);
-    const [data, setData] = useState({});
+    const [count, setCount] = useState(0);
+    const [list1, setList1] = useState([]);
+    const [list2, setList2] = useState([]);
 
     const todoHandler = (todo) => {
         setTodos([...todos, todo])
     }
 
     const setResult = (result) => {
-
-            /*result.map((res) => {
-                //console.log(res.id, res.title);
-                const stock = {id: res.id, title: res.title};
-                console.log(stock);
-
-
-            });*/
-            setTodos(result);
-            console.log(stocks);
-            //console.log(stocks);
-        //setStocks([...stocks, stock]);
-        //setTodos([...todos, stock])
-
-
-
+        setCount(result.length);
+        setStocks(result);
     }
 
     const getJson = () => {
         const result = fetch('http://localhost:8000/api/V1/stock-list')
         .then(response => response.json())
-        .then(json => setStocks(json))
+        .then(json => setResult(json))
     }
 
     return (
         <div>
-
-            <div className="wrapper">
+            <div className="">
                 <Form
                     todoHandler={ todoHandler }
                 />
             </div>
-            <div className="wrapper">
+            <div className="update">
                 <Button
                     fullWidth={true}
                     variant="contained" onClick={ () => getJson() }>Update</Button>
             </div>
-            <ul>
-                {
-                    stocks.map((stock) => (
-                        <li>{ stock.slug }</li>
-                    ))
-                }
-            </ul>
-            <div className="wrapper">
+            <div>
+                <h5>Results: {count}</h5>
+            </div>
+            {
+                stocks.map((stock) => (
+                    <div className="cardbox"><Card data={stock} /></div>
+                ))
+            }
 
-            </div>
-            <div className="wrapper">
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-            </div>
-            <div className="wrapper">
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-            </div>
         </div>
     );
 }

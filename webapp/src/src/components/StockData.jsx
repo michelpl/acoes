@@ -12,57 +12,56 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import {PriceCheck, TrendingUp} from "@mui/icons-material";
 
 
-export default function StockData() {
+export default function StockData({ data }) {
   return (
     <List sx={{ width: '100%', maxWidth: 360 }}>
       <ListItem>
         <ListItemIcon>
             <LabelIcon />
         </ListItemIcon>
-
-        <ListItemText primary="Id: 123"/>
+        <ListItemText primary={ "Id: " + data.id } />
       </ListItem>
       <ListItem>
         <ListItemIcon>
             <BadgeIcon />
         </ListItemIcon>
-        <ListItemText primary="Slug: BBSE3"/>
+        <ListItemText primary={ "Slug: " + data.slug } />
       </ListItem>
       <ListItem>
         <ListItemIcon>
             <WorkIcon />
         </ListItemIcon>
-        <ListItemText primary="Name: Banco do Brasil"/>
+        <ListItemText primary={ "Name: " + data.name }/>
       </ListItem>
         <ListItem>
             <ListItemIcon>
                     <AttachMoneyIcon />
             </ListItemIcon>
-            <ListItemText primary="Price: R$ 12.99" secondary="(uptated at 2023-03-19T02:51)" />
+            <ListItemText primary={ "Price: R$" + data.current_price } secondary={ "Updated at: " + data.updated_at } />
         </ListItem>
         <ListItem>
             <ListItemIcon>
                     <PriceCheck />
             </ListItemIcon>
-            <ListItemText primary="Fundamental value: R$ 35.87"/>
+            <ListItemText primary={ "Fundemental value: R$ " + data.fundamental_value }/>
         </ListItem>
         <ListItem>
             <ListItemIcon>
                     <DomainAddIcon />
             </ListItemIcon>
-            <ListItemText primary="P/VP: 5.55"/>
+            <ListItemText primary={ "P/VP: " + data.pvp } />
         </ListItem>
         <ListItem>
             <ListItemIcon>
                     <CurrencyExchangeIcon />
             </ListItemIcon>
-            <ListItemText primary="DY: 32%" />
+            <ListItemText primary={ "DY: " + data.dy + "%" } />
         </ListItem>
         <ListItem>
             <ListItemIcon>
                     <TrendingUp />
             </ListItemIcon>
-            <ListItemText primary="Growing expectation 198.09%" />
+            <ListItemText primary={ "Growing expectation: " + data.growing_expectation + "%" } />
         </ListItem>
     </List>
   );

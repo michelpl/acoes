@@ -18,12 +18,22 @@ body {
 }
 
 .wrapper {
-  display: flex;
+  float: left;
 }
 .wrapper > div {
   margin: .1em;
-  flex: 1;
 }
 .css-cveggr-MuiListItemIcon-root {
   color: #595a5c!important
+}
+
+.cardbox {
+  float: left;
+  margin: 5px 25px;
+  height: 800px;
+  overflow: auto;
+  background-color: white;
+}
+.update {
+  margin: 50px 0;
 }
