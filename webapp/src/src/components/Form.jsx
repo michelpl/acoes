@@ -4,11 +4,17 @@ import React, {useState} from "react";
 export default function Form({ todoHandler }) {
     const [current, setCurrent] = useState(0);
     const [dividend, setDividend] = useState(0);
-    const [percent, setPercent] = useState("");
+    const [monthly, setMonthly] = useState("0%");
+    const [yearly, setYearly] = useState("0%");
 
     const calculatePercentage = (current, dividend) => {
-        setPercent((dividend * 100 / current).toFixed(2) + "%");
+        let monthly = (dividend * 100 / current).toFixed(2);
+        let yearly = ((((1 + monthly /100) **12) -1) * 100).toFixed(2);
 
+        console.log(monthly / 100);
+
+        setMonthly(monthly + "%");
+        setYearly(yearly + "%");
     }
 
     return (
@@ -20,7 +26,7 @@ export default function Form({ todoHandler }) {
                     type="number"
                     style={{ marginBottom: 10}}
                     id="current"
-                    label="Cotação atual"
+                    label="Current value"
                     onChange={
                         (e) => { setCurrent(e.target.value); calculatePercentage(e.target.value, dividend)}
                     }
@@ -34,7 +40,7 @@ export default function Form({ todoHandler }) {
                     id="dividend"
                     type="number"
                     min="0"
-                    label="Rendimento"
+                    label="Dividend"
                     onChange={
                         (e) => { setDividend(e.target.value);  calculatePercentage(current, e.target.value);}
                     }
@@ -42,7 +48,7 @@ export default function Form({ todoHandler }) {
                 </TextField>
             </div>
             <div>
-                <Alert severity="success">{ percent }</Alert>
+                <Alert severity="success">{ "Monthly rentability: " + monthly } | { "Yearly rentability: " + yearly } </Alert>
             </div>
             <Button
                 fullWidth={true}
