@@ -56,7 +56,7 @@ class StockService
             $uri = env('BASE_EXTERNAL_API_URL') . '/api/historico-indicadores/' . $stockId . '/3';
 
             return Http::get($uri)->throw(function (Response $response) use ($stockId) {
-                throw new Exception('Stock not found: ' . $stockId, $response->status());
+                //throw new Exception('Stock not found stockid: ' . $stockId, $response->status());
             })->json();
 
         } catch (Exception $exception) {
@@ -90,7 +90,7 @@ class StockService
             $uri = env('BASE_EXTERNAL_API_URL') . '/api/cotacao/ticker/' . $stockId;
 
             $result = Http::get($uri)->throw(function (Response $response) use ($stockId) {
-                throw new Exception('Stock not found: ' . $stockId, $response->status());
+                logger('Stock not found: ' . $stockId, $response->status());
             })->json();
 
             return $result['price'];
@@ -127,7 +127,7 @@ class StockService
 
     public function getStockList()
     {
-         return StockList::where('pvp', '>', '0')->where('dy', '>=', '0')->orderBy('dy', 'desc')->get();
+         return StockList::where('pvp', '>', '0')->where('dy', '>=', '0')->orderBy('growing_expectation', 'desc')->get();
     }
 
     public function updateStockList($skip, $take)
@@ -136,6 +136,8 @@ class StockService
         foreach ($allStocks as $item) {
             $this->getStockInvestmentData($item->slug);
         }
+
+        return [$skip, $take];
     }
 
     public function getStockInvestmentData(string $slug): StockDataDTO | string
@@ -162,7 +164,9 @@ class StockService
 
         $growingExpectation = $this->getGrowingExpectation($fundamentalValue, $currentPrice);
 
-        StockList::updateOrCreate([
+        StockList::updateOrCreate(
+            ['slug' => $slug],
+            [
             'slug' => $slug,
             'name' => $data['name'],
             'external_id' => $externalId,

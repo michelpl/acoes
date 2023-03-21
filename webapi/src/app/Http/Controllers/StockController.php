@@ -74,6 +74,17 @@ class StockController extends Controller
 
     public function updateStockList(Request $request)
     {
-        return $this->stockService->updateStockList($request->skip, $request->take);
+        $skip = 0;
+        $take = 1;
+
+        if (!empty($request->skip)) {
+            $skip = $request->skip;
+        }
+
+        if (!empty($request->take)) {
+            $take = $request->take;
+        }
+
+        return $this->stockService->updateStockList($skip, $take);
     }
 }

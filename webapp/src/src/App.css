@@ -9,8 +9,12 @@ body {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  padding: 5em
-;
+  padding: 5em;
+}
+
+a {
+  text-decoration: none;
+  color: #2b53a3;
 }
 
 .App-link {
@@ -37,3 +41,12 @@ body {
 .update {
   margin: 50px 0;
 }
+
+.css-10hburv-MuiTypography-root .bold {
+  font-weight: bold;
+}
+
+.MuiButtonBase-root {
+  margin: 15px 0!important;
+}
+

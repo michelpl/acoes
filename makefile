@@ -10,7 +10,8 @@ install:
 	docker-compose exec webapi php artisan migrate:fresh
 
 run:
-	docker-compose up -d 
+	docker-compose up -d
+	docker-compose exec webapp npm start
 
 stop:
 	docker-compose down
