@@ -12,7 +12,15 @@ services:
     ports:
       - "3366:3306"
     volumes:
-      - dbdata:/var/lib/mysql
+      - ./dbdata:/var/lib/mysql
+    networks:
+      - app-network
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: mongodb
+    ports:
+      - "8181:8181"
     networks:
       - app-network
   cache:
@@ -23,7 +31,7 @@ services:
       - "6300:6379"
     command: redis-server --save 20 1 --loglevel warning --requirepass root
     volumes:
-      - cache:/data
+      - ./cache:/data
     networks:
       - app-network
   webapp:

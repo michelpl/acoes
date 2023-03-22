@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Stock;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class StockSeeder extends Seeder
 {
@@ -14,8 +15,8 @@ class StockSeeder extends Seeder
      */
     public function run()
     {
-        Stock::factory()
-            ->count(1)
-            ->create();
+        $path = public_path('sql/stocks.sql');
+        $sql = file_get_contents($path);
+        DB::unprepared($sql);
     }
 }

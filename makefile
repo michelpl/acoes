@@ -1,13 +1,23 @@
 # defines variables
-WEBAPI_PERMISSIONS ?= make permissions_webapi
-WEBAPP_PERMISSIONS ?= make permissions_webapp
+WEBAPI_PERMISSIONS ?= make permissions-webapi
+WEBAPP_PERMISSIONS ?= make permissions-webapp
+MYSQL_PASSWORD ?= root
 #include Make.config
 
 install:
-	cp src/.env.example src/.env
+	rm webapi/src/.env
+	cp webapi/.env webapi/src/.env
+	make stop
 	docker-compose up -d 
 	docker-compose exec webapi composer update -vvv
 	docker-compose exec webapi php artisan migrate:fresh
+	make seed
+
+import-data:
+	docker-compose exec db mysql -u root -p$(MYSQL_PASSWORD) hcdb.stocks < ./stocks.sql;
+
+mysql:
+	docker-compose exec db mysql -u root -p$(MYSQL_PASSWORD)
 
 run:
 	docker-compose up -d
@@ -43,3 +53,8 @@ bash:
 
 artisan:
 	docker-compose exec webapi php artisan
+
+seed:
+	cp ./stocks.sql webapi/src/public/sql/
+	docker-compose exec webapi php artisan db:seed --class=StockSeeder
+	rm webapi/src/public/sql/stocks.sql
