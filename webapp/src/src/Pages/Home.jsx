@@ -6,7 +6,7 @@ import List from "../components/List";
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
-    const [stocks, setStocks] = useState([]);
+
     const [count, setCount] = useState(0);
 
     const todoHandler = (todo) => {
@@ -18,12 +18,14 @@ export default function Home() {
         setStocks(result);
     }
 
-    const getJson = () => {
+    const getJson = async () => {
         setCount("loading...");
         const result = fetch('http://localhost:8000/api/V1/stock-list')
         .then(response => response.json())
         .then(json => setResult(json))
     }
+
+    const [stocks, setStocks] = useState(getJson);
 
     return (
         <div>
@@ -44,7 +46,6 @@ export default function Home() {
                 <Paper style={{ padding: 15, alignContent: "center", verticalAlign: "center" }}>
                     <h3>Update stock data</h3>
                     <UpdateStockData/>
-
                 </Paper>
             </div>
         </div>

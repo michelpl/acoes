@@ -127,7 +127,7 @@ class StockService
 
     public function getStockList()
     {
-         return StockList::where('pvp', '>', '0')->where('dy', '>=', '0')->orderBy('dy', 'desc')->get();
+         return StockList::all();
     }
 
     public function updateStockList($skip, $take)

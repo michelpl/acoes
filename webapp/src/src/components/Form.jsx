@@ -11,8 +11,6 @@ export default function Form({ todoHandler }) {
         let monthly = (dividend * 100 / current).toFixed(2);
         let yearly = ((((1 + monthly /100) **12) -1) * 100).toFixed(2);
 
-        console.log(monthly / 100);
-
         setMonthly(monthly + "%");
         setYearly(yearly + "%");
     }
