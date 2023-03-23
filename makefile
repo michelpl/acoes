@@ -58,3 +58,6 @@ seed:
 	cp ./stocks.sql webapi/src/public/sql/
 	docker-compose exec webapi php artisan db:seed --class=StockSeeder
 	rm webapi/src/public/sql/stocks.sql
+
+make npm:
+	docker-compose exec webapp npm

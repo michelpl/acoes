@@ -1,8 +1,8 @@
-import Card from "../components/Card";
 import Form from "../components/Form"
 import UpdateStockData from "../components/UpdateStockData"
 import React, {useState} from "react";
 import {Button, Paper} from "@mui/material";
+import List from "../components/List";
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
@@ -32,21 +32,21 @@ export default function Home() {
                     todoHandler={ todoHandler }
                 />
             </div>
+
+            <div>
+                <h5>Results: {count}</h5>
+            </div>
+            <div>
+                <Button fullWidth={true} variant="contained" onClick={ () => getJson() }>Show stock list</Button>
+                <List rows={ stocks }/>
+            </div>
             <div className="update">
                 <Paper style={{ padding: 15, alignContent: "center", verticalAlign: "center" }}>
                     <h3>Update stock data</h3>
                     <UpdateStockData/>
-                    <Button fullWidth={true} variant="contained" onClick={ () => getJson() }>Show stock list</Button>
+
                 </Paper>
             </div>
-            <div>
-                <h5>Results: {count}</h5>
-            </div>
-            {
-                stocks.map((stock) => (
-                    <div className="cardbox"><Card data={stock} /></div>
-                ))
-            }
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import {Alert, Button, outlinedInputClasses, Paper, TextField} from "@mui/material";
+import {Alert, Paper, TextField} from "@mui/material";
 import React, {useState} from "react";
 
 export default function Form({ todoHandler }) {
@@ -50,9 +50,6 @@ export default function Form({ todoHandler }) {
             <div>
                 <Alert severity="success">{ "Monthly rentability: " + monthly } | { "Yearly rentability: " + yearly } </Alert>
             </div>
-            <Button
-                fullWidth={true}
-                variant="contained" onEnter onClick={ () => calculatePercentage(current, dividend) }>Check</Button>
         </Paper>
     );
 }
