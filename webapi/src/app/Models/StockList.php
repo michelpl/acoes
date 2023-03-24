@@ -17,6 +17,10 @@ class StockList extends Model
         'fundamental_value',
         'pvp',
         'dy',
-        'growing_expectation'
+        'growing_expectation',
+        'pl',
+        'roe',
+        'net_margin',
+        'net_debt_ebitda'
     ];
 }

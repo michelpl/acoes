@@ -20,16 +20,17 @@ const columns: GridColDef[] = [
     },
     {
         field: 'name',
-        headerName: 'Company name',
+        headerName: 'Nome',
         width: 150,
         sortable: true,
     },
     {
         field: 'current_price',
-        headerName: 'Current price',
+        headerName: 'Preço atual',
         type: 'number',
         width: 150,
         sortable: true,
+        align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {
             if (params.value == null) {
                 return '';
@@ -42,11 +43,11 @@ const columns: GridColDef[] = [
     },
     {
         field: 'fundamental_value',
-        headerName: 'Fundamental value',
-        description: 'This column has a value getter and is not sortable.',
+        headerName: 'Valor justo',
         type: 'number',
         sortable: true,
         width: 160,
+        align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {
             if (params.value == null) {
                 return '';
@@ -62,12 +63,13 @@ const columns: GridColDef[] = [
         headerName: 'P/VP',
         type: 'number',
         width: 110,
+        sortable: true
     },
     {
         field: 'growing_expectation',
-        headerName: 'Growing expectation',
+        headerName: 'Probabilidade de crescimento',
         type: 'number',
-        width: 150,
+        width: 200,
         sortable: true,
         valueFormatter: (params: GridValueFormatterParams<number>) => {
             if (params.value == null) {
@@ -85,6 +87,7 @@ const columns: GridColDef[] = [
         type: 'number',
         width: 110,
         sortable: true,
+        align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {
             if (params.value == null) {
                 return '';
@@ -92,6 +95,72 @@ const columns: GridColDef[] = [
 
             const valueFormatted =
                 new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
+            return `${valueFormatted} %`;
+        },
+    },
+    {
+        field: 'pl',
+        headerName: 'P/L',
+        type: 'number',
+        width: 70,
+        sortable: true,
+        align: 'right',
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
+            return `${valueFormatted}`;
+        },
+    },
+    {
+        field: 'roe',
+        headerName: 'ROE',
+        type: 'number',
+        width: 110,
+        sortable: true,
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
+            return `${valueFormatted} %`;
+        },
+    },
+    {
+        field: 'net_margin',
+        headerName: 'Margem líquida',
+        type: 'number',
+        width: 110,
+        sortable: true,
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
+            return `${valueFormatted} %`;
+        },
+    },
+    {
+        field: 'net_debt_ebitda',
+        headerName: 'Dívida líquida / EBITIDA',
+        type: 'number',
+        width: 200,
+        sortable: true,
+        align: 'right',
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
 
             return `${valueFormatted} %`;
         },
@@ -130,7 +199,7 @@ export default function DataGridDemo({ rows }) {
                         filterModel: {
                             items: [
                                 { field: 'growing_expectation', operator: '>', value: 0 },
-                                { field: 'pvp', operator: '>', value: 0 },
+                                { field: 'pvp', operator: '>', value: 1 },
                             ],
                         },
                     },

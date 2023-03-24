@@ -93,6 +93,13 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        'connections' => [
+            'mongodb' => [
+                'driver' => 'mongodb',
+                'dsn' => env('DB_URI', ''),
+                'database' => 'stockapi',
+            ]
+        ]
     ],
 
     /*

@@ -20,7 +20,7 @@ services:
     restart: always
     container_name: mongodb
     ports:
-      - "8181:8181"
+      - "27017:27017"
     networks:
       - app-network
   cache:

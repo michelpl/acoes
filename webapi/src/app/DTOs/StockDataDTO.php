@@ -12,11 +12,15 @@ final class StockDataDTO
         public readonly float $fundamentalValue,
         public readonly float | string $PVP,
         public readonly string $DY,
-        public readonly string $growingExpectation
+        public readonly string $growingExpectation,
+        public readonly float $pl,
+        public readonly float $roe,
+        public readonly float $netMargin,
+        public readonly float $netDebtEbitda
     )
     {}
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
           'slug' => $this->slug,
@@ -26,7 +30,11 @@ final class StockDataDTO
           'fundamentalValue' => $this->fundamentalValue,
           'P/VP' => $this->PVP,
           'DY' => $this->DY,
-          'growingExpectation' => $this->growingExpectation
+          'growingExpectation' => $this->growingExpectation,
+            'pl' => $this->pl,
+            'roe' => $this->roe,
+            'net_margin' => $this->netMargin,
+            'net_debt_ebitda' => $this->netDebtEbitda
         ];
     }
 }

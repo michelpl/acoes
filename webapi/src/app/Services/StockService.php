@@ -157,13 +157,34 @@ class StockService
         $fundamentalValue = $this->getStockFundamentalValue($externalId);
         $PVP = 0;
         $DY = 0;
+        $pl = 0;
+        $roe = 0;
+        $netMargin = 0;
+        $netDebtEbitda = 0;
 
-        if (!empty($stockData['P/VP'][0]['value']) && is_numeric($stockData['P/VP'][0]['value'])) {
+        if (! empty($stockData['P/VP'][0]['value']) && is_numeric($stockData['P/VP'][0]['value'])) {
             $PVP = $stockData['P/VP'][0]['value'];
         }
 
-        if (!empty($stockData['DIVIDEND YIELD (DY)'][0]['value']) && is_numeric($stockData['DIVIDEND YIELD (DY)'][0]['value'])) {
+        if (! empty($stockData['DIVIDEND YIELD (DY)'][0]['value']) && is_numeric($stockData['DIVIDEND YIELD (DY)'][0]['value'])) {
             $DY= $stockData['DIVIDEND YIELD (DY)'][0]['value'];
+        }
+
+        if (! empty($stockData['P/L'][0]['value']) && is_numeric($stockData['P/L'][0]['value'])) {
+            $pl = $stockData['P/L'][0]['value'];
+        }
+
+        if (! empty($stockData['ROE'][0]['value']) && is_numeric($stockData['ROE'][0]['value'])) {
+            $roe = $stockData['ROE'][0]['value'];
+        }
+
+        if (! empty($stockData['MARGEM LÍQUIDA'][0]['value']) && is_numeric($stockData['MARGEM LÍQUIDA'][0]['value'])) {
+            $netMargin = $stockData['MARGEM LÍQUIDA'][0]['value'];
+        }
+
+
+        if (! empty($stockData['DÍVIDA LÍQUIDA / EBITDA'][0]['value']) && is_numeric($stockData['DÍVIDA LÍQUIDA / EBITDA'][0]['value'])) {
+            $netDebtEbitda = $stockData['DÍVIDA LÍQUIDA / EBITDA'][0]['value'];
         }
 
         $growingExpectation = $this->getGrowingExpectation($fundamentalValue, $currentPrice);
@@ -171,15 +192,19 @@ class StockService
         StockList::updateOrCreate(
             ['slug' => $slug],
             [
-            'slug' => $slug,
-            'name' => $data['name'],
-            'external_id' => $externalId,
-            'current_price' => $currentPrice,
-            'fundamental_value' => $fundamentalValue,
-            'pvp' => $PVP,
-            'dy' => $DY,
-            'growing_expectation' => $growingExpectation
-        ]);
+                'slug' => $slug,
+                'name' => $data['name'],
+                'external_id' => $externalId,
+                'current_price' => $currentPrice,
+                'fundamental_value' => $fundamentalValue,
+                'pvp' => $PVP,
+                'dy' => $DY,
+                'pl' => $pl,
+                'roe' => $roe,
+                'net_margin' => $netMargin,
+                'net_debt_ebitda' => $netDebtEbitda
+            ]
+        );
 
         return new StockDataDTO(
             $slug,
@@ -188,8 +213,12 @@ class StockService
             $currentPrice,
             $fundamentalValue,
             $PVP,
-            $DY . '%',
-            $growingExpectation . '%'
+            $DY,
+            $growingExpectation,
+            $pl,
+            $roe,
+            $netMargin,
+            $netDebtEbitda
         );
     }
 

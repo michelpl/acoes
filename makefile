@@ -34,13 +34,13 @@ showlogs:
 
 permissions:
 	$ echo "Running permissions"
-	$ (PERMISSIONS_WEB_API)
-	$ (PERMISSIONS_WEB_APP)
+	$(WEBAPI_PERMISSIONS)
+	$(WEBAPP_PERMISSIONS)
 
 permissions-webapi:
-	sudo find src/ -type d -exec chmod 775 {} \;
-	sudo find src/ -type f -exec chmod 664 {} \;
-	sudo chown -R www-data:${USER} src
+	sudo find webapi/src/ -type d -exec chmod 775 {} \;
+	sudo find webapi/src/ -type f -exec chmod 664 {} \;
+	sudo chown -R www-data:${USER} webapi/src
 
 permissions-webapp:
 	$ echo 'Running webapp permissions'\;
