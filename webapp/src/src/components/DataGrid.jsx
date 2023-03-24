@@ -13,10 +13,10 @@ const columns: GridColDef[] = [
         renderCell: (params: GridRenderCellParams<Date>) => (
             <strong>
                 <Link href={'http://investidor10.com.br/acoes/' + params.value} target="_blank">
-                    {params.value}
+                    { params.value }
                 </Link>
             </strong>
-        ),
+        )
     },
     {
         field: 'name',
@@ -30,13 +30,32 @@ const columns: GridColDef[] = [
         type: 'number',
         width: 150,
         sortable: true,
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            var valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
+            return `R$ ${valueFormatted}`;
+        }
     },
     {
         field: 'fundamental_value',
         headerName: 'Fundamental value',
         description: 'This column has a value getter and is not sortable.',
+        type: 'number',
         sortable: true,
-        width: 160
+        width: 160,
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            var valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
+            return `R$ ${valueFormatted}`;
+        },
     },
     {
         field: 'pvp',
@@ -55,7 +74,8 @@ const columns: GridColDef[] = [
                 return '';
             }
 
-            const valueFormatted = Number(params.value).toLocaleString();
+            const valueFormatted = new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
             return `${valueFormatted} %`;
         },
     },
@@ -70,8 +90,25 @@ const columns: GridColDef[] = [
                 return '';
             }
 
-            const valueFormatted = Number(params.value).toLocaleString();
+            const valueFormatted =
+                new Intl.NumberFormat('pt-BR', { }).format(params.value.toFixed(2));
+
             return `${valueFormatted} %`;
+        },
+    },
+    {
+        field: 'updated_at',
+        headerName: 'Updated at',
+        type: 'dateTime',
+        width: 110,
+        sortable: true,
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const date = new Date(params.value);
+            return(date.toLocaleString('pt-BR', { timezone: 'UTC' }));
         },
     }
 ];
@@ -87,6 +124,18 @@ export default function DataGridDemo({ rows }) {
                         paginationModel: {
                             pageSize: 20,
                         },
+                    },
+                    ...rows.initialState,
+                    filter: {
+                        filterModel: {
+                            items: [
+                                { field: 'growing_expectation', operator: '>', value: 0 },
+                                { field: 'pvp', operator: '>', value: 0 },
+                            ],
+                        },
+                    },
+                    sorting: {
+                        sortModel: [{ field: 'growing_expectation', sort: 'desc' }],
                     },
                 }}
                 stat

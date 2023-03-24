@@ -3,6 +3,7 @@ import UpdateStockData from "../components/UpdateStockData"
 import React, {useState} from "react";
 import {Button, Paper} from "@mui/material";
 import List from "../components/StockList";
+import Box from "@mui/material/Box";
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
@@ -38,6 +39,9 @@ export default function Home() {
                 <h5>Results: {count}</h5>
             </div>
             <div>
+                <Box sx={{ padding: 2 }} >
+                    <h2>Stock List</h2>
+                </Box>
                 <Button fullWidth={true} variant="contained" onClick={ () => getJson() }>Refresh stock list</Button>
                 <List rows={ stocks }/>
             </div>

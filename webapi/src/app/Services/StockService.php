@@ -125,9 +125,13 @@ class StockService
         return Stock::all();
     }
 
-    public function getStockList()
+    public function getStockList($id = null)
     {
-         return StockList::all();
+        if ($id) {
+            return StockList::where('id', '!=', $id)->get();
+        }
+
+        return StockList::all();
     }
 
     public function updateStockList($skip, $take)
