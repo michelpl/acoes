@@ -1,24 +1,28 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import {Button, Link} from "@mui/material";
-import Icon from '@mui/material/Icon';
+import { Link } from "@mui/material";
 
 const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
         field: 'slug',
-        headerName: 'Slug',
         width: 150,
         sortable: true,
-        editable: true,
+        headerName: 'Slug',
+        renderCell: (params: GridRenderCellParams<Date>) => (
+            <strong>
+                <Link href={'http://investidor10.com.br/acoes/' + params.value} target="_blank">
+                    {params.value}
+                </Link>
+            </strong>
+        ),
     },
     {
         field: 'name',
         headerName: 'Company name',
         width: 150,
         sortable: true,
-        editable: true,
     },
     {
         field: 'current_price',
@@ -26,7 +30,6 @@ const columns: GridColDef[] = [
         type: 'number',
         width: 150,
         sortable: true,
-        editable: true,
     },
     {
         field: 'fundamental_value',
@@ -40,7 +43,21 @@ const columns: GridColDef[] = [
         headerName: 'P/VP',
         type: 'number',
         width: 110,
-        editable: true,
+    },
+    {
+        field: 'growing_expectation',
+        headerName: 'Growing expectation',
+        type: 'number',
+        width: 150,
+        sortable: true,
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const valueFormatted = Number(params.value).toLocaleString();
+            return `${valueFormatted} %`;
+        },
     },
     {
         field: 'dy',
@@ -48,20 +65,23 @@ const columns: GridColDef[] = [
         type: 'number',
         width: 110,
         sortable: true,
-        editable: true
+        valueFormatter: (params: GridValueFormatterParams<number>) => {
+            if (params.value == null) {
+                return '';
+            }
+
+            const valueFormatted = Number(params.value).toLocaleString();
+            return `${valueFormatted} %`;
+        },
     }
 ];
-
-const content = (slug) => {
-    return <Button variant="text">Text</Button>
-}
 
 export default function DataGridDemo({ rows }) {
     return (
         <Box minHeight={ 300 } sx={{ width: '100%', backgroundColor: 'white' }} >
             <DataGrid
-                rows={rows}
-                columns={columns}
+                rows={ rows }
+                columns={ columns }
                 initialState={{
                     pagination: {
                         paginationModel: {
@@ -69,6 +89,7 @@ export default function DataGridDemo({ rows }) {
                         },
                     },
                 }}
+                stat
                 pageSizeOptions={[5]}
                 checkboxSelection
                 disableRowSelectionOnClick
