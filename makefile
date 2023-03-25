@@ -47,6 +47,9 @@ permissions-webapp:
 	sudo find webapp/src/src/ -type d -exec chmod 775 {} \;
 	sudo find webapp/src/src/ -type f -exec chmod 664 {} \;
 	sudo chown -R root:${USER} webapp/src/src/
+	sudo find webapp/src/public/ -type d -exec chmod 775 {} \;
+	sudo find webapp/src/public/ -type f -exec chmod 664 {} \;
+	sudo chown -R root:${USER} webapp/src/public/
 
 bash:
 	docker-compose exec webapi bash

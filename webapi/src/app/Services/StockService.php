@@ -128,7 +128,7 @@ class StockService
     public function getStockList($id = null)
     {
         if ($id) {
-            return StockList::where('id', '!=', $id)->get();
+            return StockList::where('id', '=', $id)->get();
         }
 
         return StockList::all();
@@ -218,7 +218,8 @@ class StockService
             $pl,
             $roe,
             $netMargin,
-            $netDebtEbitda
+            $netDebtEbitda,
+            $slug
         );
     }
 

@@ -54,6 +54,10 @@ a {
   background-color: white;
 }
 
-p {
+ul {
+  list-style: none;
+}
+
+p, ul li {
   color: #1b1e21!important;
 }

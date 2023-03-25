@@ -2,15 +2,30 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Link } from "@mui/material";
+import {useState} from "react";
+
+function getImage(params) {
+    return <Box
+        component="img"
+        sx={{
+            maxWidth: 30,
+        }}
+        src={ 'logos/' + params.row.slug + ".jpeg" || '' }
+    />;
+}
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    {
+        field: 'logo',
+        width: 30,
+        renderCell: getImage
+    },
     {
         field: 'slug',
-        width: 150,
+        width: 70,
         sortable: true,
         headerName: 'Slug',
-        renderCell: (params: GridRenderCellParams<Date>) => (
+        renderCell: (params: GridRenderCellParams<String>) => (
             <strong>
                 <Link href={'http://investidor10.com.br/acoes/' + params.value} target="_blank">
                     { params.value }
@@ -21,8 +36,8 @@ const columns: GridColDef[] = [
     {
         field: 'name',
         headerName: 'Nome',
-        width: 150,
-        sortable: true,
+        width: 120,
+        sortable: true
     },
     {
         field: 'current_price',
@@ -67,9 +82,9 @@ const columns: GridColDef[] = [
     },
     {
         field: 'growing_expectation',
-        headerName: 'Probabilidade de crescimento',
+        headerName: 'Crescimento provável',
         type: 'number',
-        width: 200,
+        width: 150,
         sortable: true,
         valueFormatter: (params: GridValueFormatterParams<number>) => {
             if (params.value == null) {
@@ -152,7 +167,7 @@ const columns: GridColDef[] = [
         field: 'net_debt_ebitda',
         headerName: 'Dívida líquida / EBITIDA',
         type: 'number',
-        width: 200,
+        width: 150,
         sortable: true,
         align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {
@@ -183,6 +198,8 @@ const columns: GridColDef[] = [
 ];
 
 export default function DataGridDemo({ rows }) {
+    const [pageSize, setPageSize] = useState(50);
+
     return (
         <Box minHeight={ 300 } sx={{ width: '100%', backgroundColor: 'white' }} >
             <DataGrid
@@ -191,15 +208,13 @@ export default function DataGridDemo({ rows }) {
                 initialState={{
                     pagination: {
                         paginationModel: {
-                            pageSize: 20,
+                            pageSize:  pageSize
                         },
                     },
                     ...rows.initialState,
                     filter: {
                         filterModel: {
                             items: [
-                                { field: 'growing_expectation', operator: '>', value: 0 },
-                                { field: 'pvp', operator: '>', value: 1 },
                             ],
                         },
                     },
