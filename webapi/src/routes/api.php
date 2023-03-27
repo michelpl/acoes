@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\ChargeController;
+use App\Http\Controllers\FiiController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WebhookController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,5 +33,13 @@ Route::group(['prefix' => 'V1'], function () {
         Route::get('/stock-list','getStockList');
         Route::post('/stock-list','addStockList');
         Route::post('/update-stock-list','updateStockList');
+    });
+
+    Route::controller(FiiController::class)->group(function () {
+        Route::get('/fii','index');
+    });
+
+    Route::controller(WalletController::class)->group(function () {
+        Route::get('/wallet','index');
     });
 });

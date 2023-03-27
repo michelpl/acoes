@@ -8,19 +8,15 @@ import Box from "@mui/material/Box";
 export default function Home() {
     const [todos, setTodos] = useState([]);
 
-    const [count, setCount] = useState(0);
-
     const todoHandler = (todo) => {
         setTodos([...todos, todo])
     }
 
     const setResult = (result) => {
-        setCount(result.length);
         setStocks(result);
     }
 
     const getJson = async () => {
-        setCount("loading...");
         const result = fetch('http://localhost:8000/api/V1/stock-list')
         .then(response => response.json())
         .then(json => setResult(json))
@@ -36,18 +32,18 @@ export default function Home() {
                 />
             </div>
             <div>
-                <h5>Results: {count}</h5>
+
             </div>
             <div>
                 <Box sx={{ padding: 2 }} >
-                    <h2>Stock List</h2>
+                    <h2>Lista de ações</h2>
                 </Box>
-                <Button fullWidth={true} variant="contained" onClick={ () => getJson() }>Refresh stock list</Button>
                 <List rows={ stocks }/>
+                <Button fullWidth={true} variant="contained" onClick={ () => getJson() }>Atualizar lista de ações</Button>
             </div>
             <div className="update">
                 <Paper style={{ padding: 15, alignContent: "center", verticalAlign: "center" }}>
-                    <h3>Update stock data</h3>
+                    <h3>Atualizar dados externos</h3>
                     <UpdateStockData/>
                 </Paper>
             </div>

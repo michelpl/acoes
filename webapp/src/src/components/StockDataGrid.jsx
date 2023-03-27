@@ -18,6 +18,9 @@ const columns: GridColDef[] = [
     {
         field: 'logo',
         width: 30,
+        sortable: false,
+        filterable: false,
+        editable: false,
         renderCell: getImage
     },
     {

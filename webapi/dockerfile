@@ -37,3 +37,7 @@ RUN mv /tmp/composer.phar /usr/local/bin/composer
 
 ## MongoDb
 RUN pecl install mongodb
+
+##Zsh
+RUN apt-get install zsh -y
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" -y

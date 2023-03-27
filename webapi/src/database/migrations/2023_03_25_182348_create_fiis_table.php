@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wallets', function (Blueprint $table) {
+        Schema::create('fiis', function (Blueprint $table) {
             $table->id();
             $table->string('slug');
-            $table->string('class')->nullable();
-            $table->string('name')->nullable();
-            $table->float('price')->nullable();
-            $table->string('dividend');
-            $table->date('payment_date')->nullable();
+            $table->unique('slug');
+            $table->string('area');
+            $table->float('dy');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wallets');
+        Schema::dropIfExists('fiis');
     }
 };
