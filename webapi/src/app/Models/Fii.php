@@ -11,6 +11,7 @@ class Fii extends Model
     protected $fillable = [
         'slug',
         'area',
+        'class',
         'dy'
     ];
 }

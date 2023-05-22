@@ -1,7 +1,5 @@
 import {Alert, Button, Link, Paper, TextField} from "@mui/material";
 import React, {useState} from "react";
-import ComboBox from "./Combobox";
-import FiisList from './FiisList'
 import Autocomplete from "@mui/material/Autocomplete";
 import ListItemText from "@mui/material/ListItemText";
 import ListItem from "@mui/material/ListItem";
@@ -9,7 +7,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Checkbox from "@mui/material/Checkbox";
 import List from "@mui/material/List";
-import {random} from "@mui/x-data-grid-generator";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -17,8 +14,8 @@ export default function Form({ todoHandler }) {
 
     const [current, setCurrent] = useState(0);
     const [dividend, setDividend] = useState(0);
-    const [monthly, setMonthly] = useState("0%");
-    const [yearly, setYearly] = useState("0%");
+    const [monthly, setMonthly] = useState(0);
+    const [yearly, setYearly] = useState(0);
     const [count, setCount] = React.useState(0);
 
     const getFiis = async () => {
@@ -31,7 +28,7 @@ export default function Form({ todoHandler }) {
         let newList = [];
 
         result.map((row) => {
-            newList.push({label: row.slug, id: row.id})
+            newList.push({ label: row.slug, id: row.id, fiiClass: row.class  })
         });
 
         setList(newList);
@@ -51,30 +48,45 @@ export default function Form({ todoHandler }) {
     const [value, setValue] = React.useState(list[0]);
     const [inputValue, setInputValue] = React.useState('');
 
-    const [todos, setTodos] = useState([]);
-    const addTodo = () => {
-        var newTodo = {
-            'id': inputValue,
+    const getLocalStorage = () => {
+        var local = localStorage.getItem('wishlist');
+        if (local) {
+            return JSON.parse(local);
+        }
+
+        return [];
+    }
+
+    const [wishlist, setWishlist] = useState(getLocalStorage);
+
+    const saveWishList = () => {
+        console.log(value);
+        const newItem = {
+            'id': Math.floor(Math.random() * 100000000),
+            'dbid': value.id,
+            'slug': value.label,
             'price': current,
             'dividend': dividend,
             'count': count,
             'total': current * count,
             'monthly': monthly,
-            'class': 'fiis',
+            'class': value.fiiClass,
             'yearly': yearly
 
-        }
-
-        setTodos([...todos, newTodo]);
+        };
+        localStorage.setItem("wishlist", JSON.stringify([...wishlist, newItem]));
+        setWishlist([...wishlist, newItem]);
     };
 
     const deleteTodo = (id) => {
-        var filtered = todos.filter((todo) => todo.id !== id);
-        setTodos(filtered);
+        const filtered = wishlist.filter((item) => item.id !== id);
+        setWishlist(filtered);
+        localStorage.setItem("wishlist", JSON.stringify(filtered));
     };
 
     const deleteAll = () => {
-        setTodos([]);
+        setWishlist([]);
+        localStorage.setItem("wishlist", JSON.stringify([]));
     };
 
     return (
@@ -93,7 +105,7 @@ export default function Form({ todoHandler }) {
                     id="controllable-states-demo"
                     options={list}
                     sx={{ marginBottom: 2 }}
-                    renderInput={(params) => <TextField {...params} label="Controllable" />}
+                    renderInput={(params) => <TextField {...params} label="Fiis" />}
                 />
             </div>
             <div>
@@ -141,12 +153,13 @@ export default function Form({ todoHandler }) {
                 <Alert severity="success">{ "Rentabilidade mensal: " + monthly + '%' } | { "Rentabilidade anual: " + yearly + '%' } </Alert>
             </div>
             <div>
-                <Button fullWidth={true} variant="contained" onClick={addTodo} >Salvar</Button>
+                <Button fullWidth={true} variant="contained" onClick={saveWishList} >Salvar</Button>
                 <Button fullWidth={true} variant="contained" onClick={deleteAll} >Limpar lista</Button>
             </div>
             <div>
                 <List>
-                    {todos.map((item) => (
+                    {
+                        wishlist.map((item) => (
                         <ListItem
                             key={item.id}
                             disablePadding
@@ -165,9 +178,9 @@ export default function Form({ todoHandler }) {
                                         inputProps={{ 'aria-labelledby': item.id }}
                                     />
                                 </ListItemIcon>
-                                <ListItemText sx={{ marginRight: '15' }} id={item.id} primary={ <Link href={"https://investidor10.com.br/" + item.class + '/' + item.id} target="__blank"> { item.id } </Link> }  />
+                                <ListItemText sx={{ marginRight: '15' }} id={item.id} primary={ <Link href={"https://investidor10.com.br/" + item.class + '/' + item.slug} target="__blank"> { item.slug } </Link> }  />
                                 <ListItemText sx={{ marginLeft: '15' }} id={item.id} primary={ 'Valor compra: R$' + item.price } />
-                                <ListItemText sx={{ marginLeft: '15' }} id={item.id} primary={ 'Dividendo: ' + item.dividend + '%' } />
+                                <ListItemText sx={{ marginLeft: '15' }} id={item.id} primary={ 'Dividendo: R$' + item.dividend } />
                                 <ListItemText sx={{ marginLeft: '15' }} id={item.id} primary={ 'Dividendo total: R$' + item.total } />
                                 <ListItemText sx={{ marginLeft: '15' }} id={item.id} primary={ 'Porcentagem rendimento mensal: ' + item.monthly + '%' } />
                                 <ListItemText sx={{ marginLeft: '15' }} id={item.id} primary={ 'Porcentagem rendimento anual: ' + item.yearly + '%' } />

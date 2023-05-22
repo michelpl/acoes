@@ -46,7 +46,7 @@ const columns: GridColDef[] = [
         field: 'current_price',
         headerName: 'Preço atual',
         type: 'number',
-        width: 150,
+        width: 140,
         sortable: true,
         align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {
@@ -121,7 +121,7 @@ const columns: GridColDef[] = [
         field: 'pl',
         headerName: 'P/L',
         type: 'number',
-        width: 70,
+        width: 90,
         sortable: true,
         align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {
@@ -138,7 +138,7 @@ const columns: GridColDef[] = [
         field: 'roe',
         headerName: 'ROE',
         type: 'number',
-        width: 110,
+        width: 130,
         sortable: true,
         valueFormatter: (params: GridValueFormatterParams<number>) => {
             if (params.value == null) {
@@ -170,7 +170,7 @@ const columns: GridColDef[] = [
         field: 'net_debt_ebitda',
         headerName: 'Dívida líquida / EBITIDA',
         type: 'number',
-        width: 150,
+        width: 130,
         sortable: true,
         align: 'right',
         valueFormatter: (params: GridValueFormatterParams<number>) => {

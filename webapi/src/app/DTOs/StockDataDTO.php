@@ -17,7 +17,6 @@ final class StockDataDTO
         public readonly float $roe,
         public readonly float $netMargin,
         public readonly float $netDebtEbitda,
-        public readonly float $image
     )
     {}
 
@@ -25,7 +24,6 @@ final class StockDataDTO
     {
         return [
           'slug' => $this->slug,
-          'image' => $this->image,
           'external_id' => $this->externalId,
           'name' => $this->name,
           'currentPrice' => $this->currentPrice,
