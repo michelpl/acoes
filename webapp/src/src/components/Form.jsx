@@ -60,7 +60,7 @@ export default function Form({ todoHandler }) {
     const [wishlist, setWishlist] = useState(getLocalStorage);
 
     const saveWishList = () => {
-        console.log(value);
+
         const newItem = {
             'id': Math.floor(Math.random() * 100000000),
             'dbid': value.id,
@@ -68,12 +68,13 @@ export default function Form({ todoHandler }) {
             'price': current,
             'dividend': dividend,
             'count': count,
-            'total': current * count,
+            'total': dividend * count,
             'monthly': monthly,
             'class': value.fiiClass,
             'yearly': yearly
 
         };
+        console.log(newItem);
         localStorage.setItem("wishlist", JSON.stringify([...wishlist, newItem]));
         setWishlist([...wishlist, newItem]);
     };

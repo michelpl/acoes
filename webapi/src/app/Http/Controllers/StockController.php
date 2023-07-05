@@ -84,7 +84,6 @@ class StockController extends Controller
         if (!empty($request->take)) {
             $take = $request->take;
         }
-
         return $this->stockService->updateStockList($skip, $take);
     }
 }

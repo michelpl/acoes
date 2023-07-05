@@ -5,15 +5,15 @@ MYSQL_PASSWORD ?= root
 #include Make.config
 
 install:
-	rm webapi/src/.env
 	cp webapi/.env webapi/src/.env
-	make stop
-	docker-compose up -d 
+	docker-compose build --no-cache
+	docker-compose up -d
 	docker-compose exec webapi composer update -vvv
 	docker-compose exec webapi php artisan migrate:fresh
+	docker-compose exec webapp npm install
 	make seed
 
-import-data:
+importdata:
 	docker-compose exec db mysql -u root -p$(MYSQL_PASSWORD) hcdb.stocks < ./stocks.sql;
 
 mysql:
@@ -29,7 +29,7 @@ stop:
 test:
 	docker-compose exec webapi php artisan test
 
-showlogs:
+show_logs:
 	echo "Showing logs...... \n " && tail -f src/storage/logs/laravel.log
 
 permissions:
@@ -58,9 +58,9 @@ artisan:
 	docker-compose exec webapi php artisan
 
 seed:
-	cp ./stocks.sql webapi/src/public/sql/
+	cp ./stocks.sql webapi/src/public/
 	docker-compose exec webapi php artisan db:seed --class=StockSeeder
-	rm webapi/src/public/sql/stocks.sql
+	rm webapi/src/public/stocks.sql
 
 make npm:
 	docker-compose exec webapp npm

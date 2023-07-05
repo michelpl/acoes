@@ -202,6 +202,7 @@ class StockService
                 'pl' => $pl,
                 'roe' => $roe,
                 'net_margin' => $netMargin,
+                'growing_expectation' => $growingExpectation,
                 'net_debt_ebitda' => $netDebtEbitda
             ]
         );

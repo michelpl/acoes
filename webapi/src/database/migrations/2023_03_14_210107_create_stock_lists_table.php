@@ -16,13 +16,17 @@ return new class extends Migration
         Schema::create('stock_lists', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
-            $table->string('external_id')->unique();
-            $table->string('name');
-            $table->float('current_price');
-            $table->float('fundamental_value');
-            $table->float('pvp');
-            $table->float('dy');
-            $table->float('growing_expectation');
+            $table->string('external_id')->unique()->nullable(true);
+            $table->string('name')->default('');
+            $table->float('current_price')->default(0.0);
+            $table->float('fundamental_value')->default(0.0);
+            $table->float('pvp')->default(0.0);
+            $table->float('dy')->default(0.0);
+            $table->float('pl')->default(0.0);
+            $table->float('roe')->default(0.0);
+            $table->float('net_margin')->default(0.0);
+            $table->float('net_debt_ebitda')->default(0.0);
+            $table->float('growing_expectation')->default(0.0);
             $table->timestamps();
         });
     }

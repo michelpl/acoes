@@ -138,5 +138,5 @@ You can find all the api logs on ``src/storage/logs``
 Or just executing the following command
 
 ```bash
-make showlogs
+make show_logs
 ```

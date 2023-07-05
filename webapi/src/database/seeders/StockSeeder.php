@@ -15,8 +15,8 @@ class StockSeeder extends Seeder
      */
     public function run()
     {
-        $path = public_path('sql/stocks.sql');
+        $path = public_path('stocks.sql');
         $sql = file_get_contents($path);
-        DB::unprepared($sql);
+        DB::query($sql);
     }
 }
